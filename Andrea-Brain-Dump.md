@@ -44,3 +44,9 @@ We could get this very close to perfect by using an LCM algorithm. That would li
 Instead, I've added a variable to set the number of days we want the schedule to repeat on. 
 
 
+## Docker-ize  
+
+Example: https://www.baeldung.com/dockerizing-spring-boot-application
+
+Build the jar file: `$> ./mvnw clean package`
+Start the app: `$> java -jar target/demo-0.0.1-SNAPSHOT.jar`

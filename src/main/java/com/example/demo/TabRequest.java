@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class TabRequest {
 
     @Schema(description = "Tab ID, unique user-defined string.", example = "Demo")
+    @NotBlank(message = "Tab ID is required")
     String id;
 
     @Schema(description = "Tab Start Date <MM-dd-yyyy>, first date the tab will be used. Defaults to Today.", example = "01-01-2024")
@@ -31,9 +35,10 @@ public class TabRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     LocalDate startDate;
 
+    @NotBlank(message = "Items JSON is required")
     @Schema(description = "Tab Items, user-defined map of <Name: Cost> entries.",
             example = "{\"Bob\": 2.50, \"Jeremy\": 3.75, \"Andrea\": 3.25}")
-    Map<String, Double> items;
+    Map<@NotBlank String, @NotNull @Size(min = 0, max = 100) Double> items;
 
 
     public Tab toTab() {
