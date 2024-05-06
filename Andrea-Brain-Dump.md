@@ -23,6 +23,19 @@ Which people purchase which products?
 What are the menu options? How much do they cost?
 (Flexibility for menu changes)
 
+### What would I do next?  
+
+Technically
+- Improve exception handling. 
+- Endpoint to List All Tabs with Pagination  
+- Data validation isn't working well - ended up hard-coding some of it where I thought the annotation should work. 
+
+Product Features  
+- Basic GUI  
+- Allow "overrides" such that if someone wants to change their order, or is absent for a day, or forgets their wallet, we can deal with it.  
+- Adjust for weekdays on the scheduling endpoint  
+- "Make it even" endpoint that when called, calculates minimum transactions between parties to zero out the balances. 
+
 
 ### Outputs  
 Whose turn is it to pay for coffee?  

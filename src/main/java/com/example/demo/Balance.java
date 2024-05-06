@@ -29,5 +29,10 @@ public class Balance {
         this.amountPaid = this.amountPaid + cost;
     }
 
+    protected void resetBalance() {
+        this.amountSpent = 0.00;
+        this.amountPaid = 0.00;
+    }
+
 
 }

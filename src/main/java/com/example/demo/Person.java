@@ -7,6 +7,7 @@ public class Person {
 
     // Must be final bc of hash/equals usage¬
     private String name;
+
     // When a new person is instantiated, add a $0 balance object
     private Balance balance = new Balance();
 

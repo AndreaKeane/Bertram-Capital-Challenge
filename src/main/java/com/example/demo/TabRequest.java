@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.management.InvalidAttributeValueException;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,25 +24,27 @@ import java.util.Optional;
 @Value
 @Builder
 @Jacksonized
-@Schema(description = "Tab Information")
+@Schema(description = "Tab JSON Object")
 public class TabRequest {
 
-    @Schema(description = "Tab ID, unique user-defined string.", example = "Demo")
-    @NotBlank(message = "Tab ID is required")
+    @Schema(description = "Tab ID. Unique user-defined identifier.", example = "Demo")
+    @NotBlank(message = "Tab ID is required.")
     String id;
 
-    @Schema(description = "Tab Start Date <MM-dd-yyyy>, first date the tab will be used. Defaults to Today.", example = "01-01-2024")
+    @Schema(description = "Tab Start Date <MM-dd-yyyy>. First date the tab will be used, defaults to today.", example = "01-01-2024")
+    // TODO Example
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     LocalDate startDate;
 
-    @NotBlank(message = "Items JSON is required")
-    @Schema(description = "Tab Items, user-defined map of <Name: Cost> entries.",
+    @Schema(description = "Tab Items. User-defined map of <Name: Cost> entries.",
             example = "{\"Bob\": 2.50, \"Jeremy\": 3.75, \"Andrea\": 3.25}")
+    @NotBlank(message = "Items JSON is required")
     Map<@NotBlank String, @NotNull @Size(min = 0, max = 100) Double> items;
 
 
-    public Tab toTab() {
+    public Tab toTab() throws InvalidAttributeValueException {
+        if (id == null || id.isBlank()) { throw new InvalidAttributeValueException("Tab ID is required."); } // Remove this after figuring out Hibernate validation
         Map<Person, Double> peoplizedItems = buildPeople();
         return Tab.builder()
                 .id(this.id)
@@ -51,19 +54,28 @@ public class TabRequest {
     }
 
     private Map<Person, Double> buildPeople() {
-        Map<Person, Double> items = new HashMap<>();
+        Map<Person, Double> peopleItems = new HashMap<>();
         for (Map.Entry<String, Double> item : this.items.entrySet()) {
-            Person p = new Person(item.getKey());
-
-            items.put(p, item.getValue());
+            String personName = item.getKey();
+            Person p = new Person(personName);
+            peopleItems.put(p, item.getValue());
         }
-        return items;
+        return peopleItems;
     }
 
     // Generate a Tab object from a JSON file, instead of through a Post request
     public static TabRequest tabFromJson(String filename) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         return objectMapper.readValue(new File(filename), TabRequest.class);
+    }
+
+    // Testing Helper to reduce boilerplate code
+    public static Map<String, Double> testItems() {
+        Map<String, Double> items = new HashMap<>(4);
+        items.put("personA", 1.00);
+        items.put("personB", 2.00);
+        items.put("personC", 3.00);
+        return items;
     }
 
 }

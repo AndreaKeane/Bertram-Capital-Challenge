@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,6 +71,15 @@ public class PayerControllerTests {
     }
 
     @Test
+    public void whoPaysTodayFutureDatedStart() {
+        // Error handling when user asks "Who pays today?" for a Tab with a future start date
+        setupTabContext(makeTestTabRequest(-1));
+
+        ResponseEntity<PayerResponse> response = template.getForEntity("/tab/test/today", PayerResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
     public void whoPaysTodayBreakeven() {
         // Who pays on Day 6/Breakeven - Using the Dates logic
         // After paying for Day 6 - Everyone's payments should break even. Assert that no one has an outstanding balance
@@ -86,17 +96,49 @@ public class PayerControllerTests {
     @Test
     public void getTestTabSchedule() {
         // Generate a payment schedule for N number of days
-        // I chose 12 days, which is 2 times through the rotation
+        // I chose 12 days, which is 2 times through the rotation for the test Tab
         // Expect: The schedule contains results for 12 days
         // Expect: PersonC pays on Days 1 and 7, which are the "top" of the rotation
         setupTabContext(makeTestTabRequest());
 
-        ResponseEntity<TabScheduleResponse> response = template.getForEntity("/tab/test/schedule/12", TabScheduleResponse.class);
+        ResponseEntity<PayerScheduleResponse> response = template.getForEntity("/tab/test/schedule/12", PayerScheduleResponse.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Map<Integer, String> schedule = response.getBody().getSchedule();
         assertThat(schedule.size()).isEqualTo(12);
         assertThat(schedule.get(1)).isEqualTo("personC");
         assertThat(schedule.get(7)).isEqualTo("personC");
+    }
+
+    @Test
+    public void getTestTabScheduleNegativeNumDays() {
+        setupTabContext(makeTestTabRequest());
+
+        ResponseEntity<PayerScheduleResponse> res0 = template.getForEntity("/tab/test/schedule/0", PayerScheduleResponse.class);
+        assertThat(res0.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        ResponseEntity<PayerScheduleResponse> res1 = template.getForEntity("/tab/test/schedule/-1", PayerScheduleResponse.class);
+        assertThat(res1.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        ResponseEntity<PayerScheduleResponse> res1000 = template.getForEntity("/tab/test/schedule/-1000", PayerScheduleResponse.class);
+        assertThat(res1000.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void compareScheduleToDaily() {
+        setupTabContext(makeTestTabRequest());
+
+        // Get the schedule for a 6 day rotation
+        ResponseEntity<PayerScheduleResponse> resSchedule = template.getForEntity("/tab/test/schedule/6", PayerScheduleResponse.class);
+        assertThat(resSchedule.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Map<Integer, String> schedule = resSchedule.getBody().getSchedule();
+        assertThat(schedule.size()).isEqualTo(6);
+
+        // Make sure that the single-read endpoint matches the schedule for each day
+        for (Integer i = 1; i <= 6; i++ ) {
+            ResponseEntity<PayerResponse> r = template.getForEntity("/tab/test/day/%s".formatted(i), PayerResponse.class);
+            assertThat(r.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(r.getBody().getName()).isEqualTo(schedule.get(i));
+        }
     }
 
     /* HELPERS ------------------------------------------------------------------------------------------------------ */

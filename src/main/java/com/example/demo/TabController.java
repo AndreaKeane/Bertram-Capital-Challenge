@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
+import javax.management.InvalidAttributeValueException;
 import java.util.List;
 
 @Tag(name = "Tab", description = "Tab CRUD APIs")
@@ -20,11 +21,6 @@ import java.util.List;
 public class TabController {
 
     static Logger log = LoggerFactory.getLogger(TabController.class);
-
-    @RequestMapping("/")
-    public String index() {
-        return "Welcome to the Who Buys Coffee App!";
-    }
 
     /* TABS CRUD ---------------------------------------------------------------------------------------------------- */
 
@@ -34,24 +30,30 @@ public class TabController {
                     "The Tab Start Date (optional) will default to the date of creation unless specified.")
     // TODO: Is this redundant in Swagger?
     @PostMapping(value = "/tab", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public static TabResponse postTab(@Parameter(description = "Tab JSON") @RequestBody TabRequest request) {
+    public static TabResponse postTab(@Parameter @RequestBody TabRequest request) {
         try {
             Tab tab = TabService.createTab(request.toTab());
             return TabResponse.fromTab(tab);
         } catch (InstanceAlreadyExistsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.toString(), e);
+        } catch (OutOfMemoryError e) {
+            throw new ResponseStatusException(HttpStatus.INSUFFICIENT_STORAGE, e.toString(), e);
+        } catch (InvalidAttributeValueException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.toString(), e);
         }
     }
 
     @Operation(summary = "Update a Tab")
     @PutMapping(path = "/tab", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public static TabResponse putTab(@Parameter(description = "Tab JSON") @RequestBody TabRequest tabRequest) {
+    public static TabResponse putTab(@Parameter @RequestBody TabRequest tabRequest) {
         try {
             Tab tab = tabRequest.toTab();
             TabService.updateTab(tab);
             return TabResponse.fromTab(tab);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID '%s' does not exist.".formatted(tabRequest.getId()), e);
+        } catch (InvalidAttributeValueException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.toString(), e);
         }
     }
 
@@ -76,5 +78,4 @@ public class TabController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID '%s' does not exist.".formatted(id), e);
         }
     }
-
 }

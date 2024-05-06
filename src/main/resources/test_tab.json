@@ -1,0 +1,9 @@
+{
+    "id": "test",
+    "startDate": "05-01-2024",
+    "items": {
+        "personA": 1.00,
+        "personB": 2.00,
+        "personC": 3.00
+    }
+}

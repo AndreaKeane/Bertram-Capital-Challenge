@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "b0cec8e9-96ba-4b15-a919-b57da7ee147f",
+		"name": "Bertram Capital Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8720651"
+	},
+	"item": [
+		{
+			"name": "Tab APIs",
+			"item": [
+				{
+					"name": "Create Tab",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{tab_id}},\n    \"startDate\": \"05-01-2024\",\n    \"items\": {\n        \"Bob\": 1.00, \n        \"Jeremy\": 2.0, \n        \"Andrea\": 3.0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tab",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Tab",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tab/{{tab_id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab",
+								"{{tab_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tab",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{tab_id}},\n    \"items\": {\n        \"Bob\": 1.00, \n        \"Jeremy\": 2.0, \n        \"Andrea\": 3.0, \n        \"Testing Update\": 4.0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/tab",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tab",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tab/{{tab_id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab",
+								"{{tab_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payer APIs",
+			"item": [
+				{
+					"name": "Get Schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tab/{{tab_id}}/schedule/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab",
+								"{{tab_id}}",
+								"schedule",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payer Today",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tab/{{tab_id}}/today",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab",
+								"{{tab_id}}",
+								"today"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payer N-th Day",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/tab/{{tab_id}}/day/25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"tab",
+								"{{tab_id}}",
+								"day",
+								"25"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "tab_id",
+			"value": "test"
+		}
+	]
+}
