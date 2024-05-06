@@ -9,7 +9,7 @@ import java.util.*;
 @Value
 @Builder
 @Jacksonized
-public class TabPayerResponse {
+public class PayerResponse {
     String name; // Name identifier of the paying person
     Double amount; // Dollar amount this person is responsible for
     List<PersonResponse> details; // Balance details for each person on the tab

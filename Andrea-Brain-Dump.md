@@ -2,11 +2,14 @@
 
 ## TO DO 
 
-X Clean up business logic  
 - Do the routes / verbs make sense? 
+- Project organization   
+- Write fail-cases tests (and handle fail cases)  
 - Data Validation, helpful error handling  
-- OpenAPI / Swagger spec  
-- Docker container  
+- Cleanup + Review - OpenAPI / Swagger spec  
+- Cleanup + Review - Docker container  
+- Annotation cleanup?  
+- README  
 
 
 ## Params  

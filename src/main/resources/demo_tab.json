@@ -2,8 +2,12 @@
     "id": "demo",
     "startDate": "01-01-2024",
     "items": {
-        "Jeremy": 2.0,
-        "Bob": 1.0,
-        "Andrea": 3.0
+        "Bob": 4.25,
+        "Jeremy": 3.00,
+        "Andrea": 3.50,
+        "Karleen": 4.00,
+        "Carl": 3.25,
+        "Greg": 4.50,
+        "Kirsten": 3.75
     }
 }

@@ -13,7 +13,7 @@ public class PersonResponse {
     Double hasPaid;
     Double owes;
 
-    protected static PersonResponse fromPerson(Person person) {
+    public static PersonResponse fromPerson(Person person) {
 
         return PersonResponse.builder()
                 .name(person.getName())

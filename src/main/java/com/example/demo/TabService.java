@@ -20,6 +20,7 @@ public class TabService {
 
     static Logger log = LoggerFactory.getLogger(TabService.class);
 
+    // TODO: Should I use a cache pattern? : https://www.baeldung.com/spring-dirtiescontext
     // In-Memory Tab Storage - Allow CRUD operations for multiple Tab objects
     private static final Map<String, Tab> TABS = new ConcurrentHashMap<>(4);
 
@@ -63,18 +64,19 @@ public class TabService {
     }
 
     // GET who pays a tab on day <day_number>
-    public static TabPayerResponse getWhoPays(String tabId, Integer dayNumber) throws InstanceNotFoundException {
+    public static PayerResponse getWhoPays(String tabId, Integer dayNumber) throws InstanceNotFoundException {
         Tab tab = readTab(tabId);
         Person payer = findPayer(tab, dayNumber);
-        List<PersonResponse> details = TabPayerResponse.generateDetails(tab);
-        return new TabPayerResponse(payer.getName(), tab.calculateTotal(), details);
+        List<PersonResponse> details = PayerResponse.generateDetails(tab);
+        return new PayerResponse(payer.getName(), tab.calculateTotal(), details);
     }
 
     // GET who pays a tab today, based on tab.startDate
-    public static TabPayerResponse getWhoPays(String tabId) throws InstanceNotFoundException {
+    public static PayerResponse getWhoPays(String tabId) throws InstanceNotFoundException {
 
         // Retrieve the Tab object for the given tabId
         Tab tab = readTab(tabId);
+        log.info("Determining who pays today (%s) for Tab %s".formatted(LocalDate.now(), tab));
 
         // Determine the number of days between today and the Tab's startDate
         int daysSinceStart = Period.between(tab.startDate(), LocalDate.now()).getDays() + 1;
@@ -87,9 +89,9 @@ public class TabService {
         Person payer = findPayer(tab, daysSinceStart);
 
         // Give the user more information about the state
-        List<PersonResponse> details = TabPayerResponse.generateDetails(tab);
+        List<PersonResponse> details = PayerResponse.generateDetails(tab);
 
-        return new TabPayerResponse(payer.getName(), tab.calculateTotal(), details);
+        return new PayerResponse(payer.getName(), tab.calculateTotal(), details);
     }
 
     private static Person findPayer(Tab tab, long dayNumber) {
@@ -118,7 +120,7 @@ public class TabService {
     }
 
     // Visible For Testing - Compromise so we can reset the tabs map for tests.
-    // Prevents running tests in parallel (not a big deal for a small application)
+    // We will not be able to run tests in parallel with this design
     protected void resetTabsMap() {
         TABS.clear();
     }
