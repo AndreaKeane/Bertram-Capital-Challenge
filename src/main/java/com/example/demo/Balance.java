@@ -12,7 +12,7 @@ public class Balance {
     public double owes() {
         // Spent $30, Paid $20 >> Amount Owed $30 - $20 >> $10
         // Spent $30, Paid $50 >> Amount Owed $30 - $50 >> -$20
-        return Math.round(amountSpent - amountPaid);
+        return amountSpent - amountPaid;
     }
 
     public void spend(double cost) {

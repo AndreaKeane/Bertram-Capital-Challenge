@@ -25,12 +25,12 @@ public class PayerController {
     @Operation(
             summary = "Get who pays by day count",
             description = "Get who pays on the N-th day of using the specified tab.")
-    @GetMapping(value = "/tab/{tab_id}/day/{num}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/tab/{id}/day/{num}", produces = MediaType.APPLICATION_JSON_VALUE)
     public static PayerResponse getWhoPays(
-            @Parameter(description = "Tab ID") @PathVariable String tab_id,
-            @Parameter(description = "Day Number, starting from 1") @PathVariable Integer num) {
+            @Parameter(description = "Tab ID") @PathVariable("id") String tab_id,
+            @Parameter(description = "Day Number, starting from 1") @PathVariable("num") Integer dayNum) {
         try {
-            return TabService.getWhoPays(tab_id, num);
+            return TabService.getWhoPays(tab_id, dayNum);
         } catch (InstanceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID '%s' does not exist.".formatted(tab_id), e);
         }
@@ -40,8 +40,8 @@ public class PayerController {
             summary = "Get who pays today based on start date",
             description = "Get who pays for coffee today, assuming coffee has been purchased every day since the start date assigned to the tab.")
     // TODO: Assume skip days for some days of the week?
-    @GetMapping(value = "/tab/{tab_id}/today", produces = MediaType.APPLICATION_JSON_VALUE)
-    public static PayerResponse getWhoPays(@Parameter(description = "Tab ID") @PathVariable String tab_id) {
+    @GetMapping(value = "/tab/{id}/today", produces = MediaType.APPLICATION_JSON_VALUE)
+    public static PayerResponse getWhoPays(@Parameter(description = "Tab ID") @PathVariable("id") String tab_id) {
         try {
             ;
             return TabService.getWhoPays(tab_id);
@@ -55,14 +55,14 @@ public class PayerController {
     @Operation(
             summary = "Get payer schedule",
             description = "Generate a payment schedule for N-number of days using the specified tab.")
-    @GetMapping(value = "/tab/{tab_id}/schedule/{num_days}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/tab/{id}/schedule/{numDays}", produces = MediaType.APPLICATION_JSON_VALUE)
     // TODO: Max number of days on the schedule?
     // TODO: Week day logic?
     public static PayerScheduleResponse getSchedule(
-            @Parameter(description = "Tab ID") @PathVariable String tab_id,
-            @Parameter(description = "Number of Days on the Schedule") @PathVariable Integer num_days) {
+            @Parameter(description = "Tab ID") @PathVariable("id") String tab_id,
+            @Parameter(description = "Number of Days on the Schedule") @PathVariable Integer numDays) {
         try {
-            return TabService.getSchedule(tab_id, num_days);
+            return TabService.getSchedule(tab_id, numDays);
         } catch (InstanceNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID '%s' does not exist.".formatted(tab_id), e);
         } catch (InvalidAttributeValueException e) {

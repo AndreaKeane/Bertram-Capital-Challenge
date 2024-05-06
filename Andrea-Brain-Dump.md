@@ -66,3 +66,9 @@ Example: https://www.baeldung.com/dockerizing-spring-boot-application
 
 Build the jar file: `$> ./mvnw clean package`
 Start the app: `$> java -jar target/demo-0.0.1-SNAPSHOT.jar`
+
+
+Go inside the docker container and look around 
+`docker run --entrypoint "" -it test:latest /bin/sh`
+
+`Docker build --tag test -f Dockerfile .`
