@@ -6,9 +6,11 @@ Bob, Jeremy, and the other 5 coworkers in the Bertram Labs office love coffee. I
 right after lunch, they walk down the street to their favorite coffee shop to grab a cup to go. Bob
 always gets a cappuccino, Jeremy likes his coffee black, and the others have their favorite
 coffee beverage too. To ease the checkout process, only one coworker pays for all the coffees
-each day. As you can imagine, they have a problem every day: whose turn is it to pay for coffee?
+each day. As you can imagine, they have a problem every day: whose turn is it to pay for coffee?  
 
-This application implements a Springboot RESTful API, which provides a [swagger page](http://localhost:8080/swagger-ui/index.html#/) (when app is running).   
+This solution constructs a sequence and identifies the next payer by evaluating who has the highest debt for a given day within the sequence. In case of a tie, the individual with both the highest debt and the largest outstanding balance will be assigned payment duties. This solution gradually approaches fairness, which can be seen by running a [6-day sequence with the Test Tab](http://localhost:8080/tab/test/day/6).  
+
+This application implements a Springboot RESTful API, which provides a [swagger page](http://localhost:8080/swagger-ui/index.html#/).  
 A [Postman Collection](BertramCapitalChallenge.postman_collection.json) is also available. 
 
 ## Usage
@@ -17,11 +19,14 @@ A [Postman Collection](BertramCapitalChallenge.postman_collection.json) is also 
 
 [Docker Desktop](https://docs.docker.com/get-docker/)
 
-#### Project Dependencies
+#### Project Dependencies  
 Java: `21.0.2`  
 Maven: `Apache Maven 3.9.6`
 
-### Installation
+### Run Application
+
+1. Clone the repository. 
+2. Build and run the dockerized application using one of the following: 
 
 Docker Compose
 
@@ -37,14 +42,13 @@ docker build --tag bertram-capital-challenge -f Dockerfile .
 docker run bertram-capital-challenge:latest 
 ```
 
-### Quick Start
+### Demo Use Cases
 
-1. Build and Run the dockerized application.
-2. Review the preloaded [Demo Data](http://localhost:8080/tab/demo) and [Test Data](http://localhost:8080/tab/test) to
+1. Review the preloaded [Demo Data](http://localhost:8080/tab/demo) and [Test Data](http://localhost:8080/tab/test) to
    get an idea of what the Tab object looks like.
-3. Check out [Today's Payer](http://localhost:8080/tab/demo/today) based on the preloaded demo data.
-4. Check out the [Payer on Day 5](http://localhost:8080/tab/demo/day/5), which assumes we've paid the same tab for 5 trips in a row. 
-5. Check out the [Payer Schedule](http://localhost:8080/tab/demo/schedule/5) for the next 5 days.
+2. Check out [Today's Payer](http://localhost:8080/tab/demo/today) based on the preloaded demo data.
+3. Check out the [Payer on Day 5](http://localhost:8080/tab/demo/day/5), which assumes we've paid the same tab for 5 trips in a row. 
+4. Check out the [Payer Schedule](http://localhost:8080/tab/demo/schedule/5) for the next 5 days.
 
 ### Custom Tab Data
 
